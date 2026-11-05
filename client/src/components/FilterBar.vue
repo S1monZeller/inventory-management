@@ -102,12 +102,12 @@ export default {
 
 <style scoped>
 .filters-bar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   padding: 0.75rem 0;
   position: sticky;
-  top: 70px;
-  z-index: 90;
+  top: 0;
+  z-index: var(--z-bar);
 }
 
 .filters-container {
@@ -121,9 +121,11 @@ export default {
 
 .filters-grid {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
   flex: 1;
+  min-width: 0;
 }
 
 .filter-group {
@@ -190,5 +192,12 @@ export default {
 .reset-filters-btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* Same breakpoint as NARROW_VIEWPORT_QUERY in App.vue */
+@media (max-width: 900px) {
+  .filters-container {
+    padding: 0 1rem;
+  }
 }
 </style>

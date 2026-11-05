@@ -258,7 +258,8 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 300px;
+  /* min() lets the box shrink to the card header beside the sidebar rail */
+  min-width: min(300px, 100%);
 }
 
 .search-icon {

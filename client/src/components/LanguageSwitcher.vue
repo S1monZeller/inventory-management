@@ -97,6 +97,7 @@ const selectLanguage = (locale) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
   padding: 0.5rem 0.875rem;
   background: white;
   border: 1px solid #e2e8f0;
@@ -119,23 +120,29 @@ const selectLanguage = (locale) => {
 }
 
 .language-label {
+  flex: 1;
+  text-align: left;
   font-weight: 500;
 }
 
+/* The menu opens upward from the sidebar footer, so the closed chevron points up */
 .chevron {
   color: #64748b;
+  transform: rotate(180deg);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
 
 .chevron-open {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
 }
 
 .dropdown-menu {
+  /* Anchored to the left edge and opening upward: the button sits at the bottom of
+     the sidebar, so the top bar's "below, right-aligned" position would run off screen */
   position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
   min-width: 160px;
   background: white;
   border: 1px solid #e2e8f0;

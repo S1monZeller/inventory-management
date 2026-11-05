@@ -124,6 +124,7 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 0.625rem;
+  width: 100%;
   padding: 0.5rem 0.875rem;
   background: white;
   border: 1px solid #e2e8f0;
@@ -139,6 +140,7 @@ const handleLogout = () => {
 }
 
 .avatar {
+  flex-shrink: 0;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -153,31 +155,44 @@ const handleLogout = () => {
 }
 
 .profile-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
   font-size: 0.875rem;
   font-weight: 500;
   color: #0f172a;
 }
 
+/* The menu opens upward from the sidebar footer, so the closed chevron points up */
 .chevron {
   color: #64748b;
+  flex-shrink: 0;
+  transform: rotate(180deg);
   transition: transform 0.2s ease;
 }
 
 .chevron-open {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
 }
 
 .dropdown-menu {
+  /* Anchored to the left edge and opening upward: the button sits at the bottom of
+     the sidebar, so the top bar's "below, right-aligned" position would run off screen.
+     This holds in rail mode too, where the menu extends over the main column. */
   position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  min-width: 280px;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  min-width: min(280px, calc(100vw - 1.5rem));
+  max-height: calc(100vh - 5.5rem);
+  overflow-y: auto;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  overflow: hidden;
 }
 
 .dropdown-header {

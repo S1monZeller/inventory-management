@@ -146,10 +146,10 @@
             <div class="horizontal-bar-chart" v-if="categoryData.length > 0">
               <div v-for="cat in categoryData" :key="cat.name" class="h-bar-item">
                 <div class="h-bar-label">{{ translateCategory(cat.name) }}</div>
+                <!-- Sits outside the bar: inside it, small bars clipped their own value -->
+                <span class="h-bar-value">{{ selectedCurrency === 'JPY' ? formatCurrency(cat.value, selectedCurrency) : `$${(cat.value / 1000).toFixed(1)}K` }}</span>
                 <div class="h-bar-container">
-                  <div class="h-bar" :style="{ width: (cat.value / maxCategoryValue * 100) + '%', background: cat.color }">
-                    <span class="h-bar-value">{{ selectedCurrency === 'JPY' ? formatCurrency(cat.value, selectedCurrency) : `$${(cat.value / 1000).toFixed(1)}K` }}</span>
-                  </div>
+                  <div class="h-bar" :style="{ width: (cat.value / maxCategoryValue * 100) + '%', background: cat.color }"></div>
                 </div>
               </div>
             </div>
@@ -763,6 +763,8 @@ export default {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 1rem;
+  /* Lets .kpi-value size itself from the card width rather than the viewport */
+  container-type: inline-size;
 }
 
 .kpi-header {
@@ -778,7 +780,8 @@ export default {
 }
 
 .kpi-value {
-  font-size: 2rem;
+  /* Long values such as yen totals must fit a narrow card; 11.5cqi fits 14 characters */
+  font-size: min(2rem, 11.5cqi);
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 0.5rem;
@@ -961,23 +964,25 @@ export default {
 }
 
 .h-bar-item {
+  /* Label and value share the first row; the track wraps to a full-width second row */
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
 }
 
 .h-bar-label {
-  width: 120px;
-  min-width: 120px;
+  flex: 1;
+  min-width: 0;
   font-size: 0.875rem;
   font-weight: 600;
   color: #475569;
-  flex-shrink: 0;
 }
 
 .h-bar-container {
-  flex: 1;
-  height: 32px;
+  flex: 0 0 100%;
+  height: 12px;
   background: #f8fafc;
   border-radius: 6px;
   overflow: hidden;
@@ -985,17 +990,13 @@ export default {
 
 .h-bar {
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 0.75rem;
   transition: width 0.6s ease;
 }
 
 .h-bar-value {
   font-size: 0.813rem;
   font-weight: 700;
-  color: white;
+  color: #0f172a;
 }
 
 .line-chart {
@@ -1267,5 +1268,14 @@ export default {
   background: #475569;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3);
+}
+
+/* These fixed two-column grids have no room beside the rail. Same breakpoint as
+   NARROW_VIEWPORT_QUERY in App.vue. */
+@media (max-width: 900px) {
+  .charts-grid,
+  .order-health-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 </style>
